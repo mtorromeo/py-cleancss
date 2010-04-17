@@ -1,0 +1,70 @@
+CleanCSS
+========
+
+CleanCSS is a simple pythonic language for CSS inspired by CleverCSS but simpler
+and with less obstrusive features.
+
+Why
+===
+I really liked the idea behind CleverCSS but when used in production I realized
+that I was trying to get away from its parser by escaping strings and unsupported
+CSS properties way too often. Using vendor prefixes like -webkit-gradient and
+values such as rgba resulted in a messy CSS, so I decided to write my own parser
+for a similar syntax without all the complex features that I did not use anyway
+and it now works fine for me in REAL modern websites.
+
+Nutshell
+========
+
+I'm going to keep the CleverCSS examples where possible since the syntax is really
+similar.
+
+A small example below.  Note the indentation based syntax and how you can nest rules::
+
+    ul#comments, ol#comments:
+      margin: 0
+      padding: 0
+
+      li:
+        padding: 0.4em
+        margin: 0.8em 0 0.8em
+
+        h3:
+          font-size: 1.2em
+        p:
+          padding: 0.3em
+        p.meta:
+          text-align: right
+          color: #ddd
+
+Of course you can do the very same in CSS, but because of its flat nature the
+code would look more verbose.  The following piece of code is the CleanCSS
+output of the above file::
+
+    ul#comments,
+    ol#comments {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul#comments li,
+    ol#comments li {
+      padding: 0.4em;
+      margin: 0.8em 0 0.8em;
+    }
+
+    ul#comments li h3,
+    ol#comments li h3 {
+      font-size: 1.2em;
+    }
+
+    ul#comments li p,
+    ol#comments li p {
+      padding: 0.3em;
+    }
+
+    ul#comments li p.meta,
+    ol#comments li p.meta {
+      text-align: right;
+      color: #dddddd;
+    }
