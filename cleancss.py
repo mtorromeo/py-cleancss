@@ -2,7 +2,7 @@
 """
 Documentattion here
 """
-import re
+import sys, re
 
 version = '0.1'
 __all__ = ['convert']
@@ -14,7 +14,8 @@ class ParserError(Exception):
 
 	def __init__(self, lineno, message):
 		self.lineno = lineno
-		Exception.__init__(self, message)
+		Exception.__init__(self)
+		self.message = message
 
 	def __str__(self):
 		return '%s (line %s)' % (
@@ -36,12 +37,13 @@ class Parser(object):
 		if len(selectorTree)>1:
 			flattenedBase = self.flattenSelectors(selectorTree[:-1])
 			for i, sel in enumerate(tail):
+				sel = sel
 				if sel[0] == '&':
 					sel = sel[1:]
-				else:
-					sel = ' '+sel
-				tail[i] = flattenedBase.strip() + sel
-		return ', '.join(tail)
+				elif flattenedBase != '':
+					sel = flattenedBase+' '+sel
+				tail[i] = sel
+		return ',\n'.join(tail)
 
 	def toCss(self):
 		level = 0
@@ -82,7 +84,10 @@ class Parser(object):
 			
 			match = self._r_selector.match(line)
 			if match:
-				cur_rule_tree.append(match.group(1).split(','))
+				selectors = match.group(1).split(',')
+				for i, sel in enumerate(selectors):
+					selectors[i] = sel.strip()
+				cur_rule_tree.append(selectors)
 				selectorsChanged = True
 				continue
 			
@@ -97,20 +102,36 @@ class Parser(object):
 					raise ParserError(lineno, 'Selector expected, found definition')
 				if selectorsChanged:
 					selectors = self.flattenSelectors(cur_rule_tree)
-					print cur_rule_tree, selectors
 					rules.append((selectors, []))
 					selectorsChanged = False
 				if len(rule_prefixes)>0:
 					prefixes = '-'.join(rule_prefixes) + '-'
 				else:
 					prefixes = ''
-				rules[-1][1].append("{rule}: {definition};".format(rule=prefixes + match.group(1), definition=match.group(2)))
+				rules[-1][1].append("%s: %s;" % (prefixes + match.group(1), match.group(2)))
 				continue
 
 			raise ParserError(lineno, 'Unexpected item')
 		
-		return ''.join( [ "{selectors} {{\n\t{definitions}\n}}\n".format(selectors=selectors, definitions='\n\t'.join(definitions)) for selectors, definitions in rules ] )
+		return ''.join( [ "%s {\n\t%s\n}\n" % (selectors, '\n\t'.join(definitions)) for selectors, definitions in rules ] )
 
 def convert(sourcestream, context=None):
 	"""Convert a CleanCSS file into a normal stylesheet."""
 	return Parser(sourcestream).toCss()
+
+def main():
+	if len(sys.argv) <= 1:
+		print """Usage: %s <file 1> [ <file 2> ... <file n>]
+
+Version %s
+(c) 2010 Massimiliano Torromeo""" % (sys.argv[0], version)
+	else:
+		for filename in sys.argv[1:]:
+			try:
+				with open(filename) as f:
+					print convert(f)
+			except (IOError, ParserError) as e:
+				sys.exit(e)
+
+if __name__ == '__main__':
+	main()
