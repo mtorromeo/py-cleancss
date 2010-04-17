@@ -22,9 +22,12 @@ similar.
 
 A small example below.  Note the indentation based syntax and how you can nest rules::
 
-	ul#comments, ol#comments:
+	#comments:
 		margin: 0
 		padding: 0
+		font->
+			family: Verdana, sans-serif
+			size: .9em
 
 	li:
 		padding: 0.4em
@@ -42,10 +45,11 @@ Of course you can do the very same in CSS, but because of its flat nature the
 code would look more verbose.  The following piece of code is the CleanCSS
 output of the above file::
 
-	ul#comments,
-	ol#comments {
+	#comments {
 		margin: 0;
 		padding: 0;
+		font-family: Verdana, sans-serif
+		font-size: .9em
 	}
 
 	ul#comments li,

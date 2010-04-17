@@ -1,6 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Documentattion here
+CleanCSS is a simple pythonic language for CSS inspired by
+`CleverCSS <http://sandbox.pocoo.org/clevercss/>`_ but simpler and with less
+obstrusive features.
+
+Library usage
+-------------
+Import the cleancss module and call the convert() function with a file-like object.
+
+Example::
+
+	import cleancss
+	with open('file.css') as f:
+		print cleancss.convert(f)
 """
 import sys, re
 
