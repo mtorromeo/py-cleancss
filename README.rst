@@ -22,54 +22,54 @@ similar.
 
 A small example below.  Note the indentation based syntax and how you can nest rules::
 
-	#comments:
+	#header, #footer:
 		margin: 0
 		padding: 0
 		font->
 			family: Verdana, sans-serif
 			size: .9em
 
-	li:
-		padding: 0.4em
-		margin: 0.8em 0 0.8em
+		li:
+			padding: 0.4em
+			margin: 0.8em 0 0.8em
 
-		h3:
-			font-size: 1.2em
-		p:
-			padding: 0.3em
-		p.meta:
-			text-align: right
-			color: #ddd
+			h3:
+				font-size: 1.2em
+			p:
+				padding: 0.3em
+			p.meta:
+				text-align: right
+				color: #ddd
 
 Of course you can do the very same in CSS, but because of its flat nature the
 code would look more verbose.  The following piece of code is the CleanCSS
 output of the above file::
 
-	#comments {
+	#header, #footer {
 		margin: 0;
 		padding: 0;
 		font-family: Verdana, sans-serif
 		font-size: .9em
 	}
 
-	ul#comments li,
-	ol#comments li {
+	#header li,
+	#footer li {
 		padding: 0.4em;
 		margin: 0.8em 0 0.8em;
 	}
 
-	ul#comments li h3,
-	ol#comments li h3 {
+	#header li h3,
+	#footer li h3 {
 		font-size: 1.2em;
 	}
 
-	ul#comments li p,
-	ol#comments li p {
+	#header li p,
+	#footer li p {
 		padding: 0.3em;
 	}
 
-	ul#comments li p.meta,
-	ol#comments li p.meta {
+	#header li p.meta,
+	#footer li p.meta {
 		text-align: right;
 		color: #dddddd;
 	}
