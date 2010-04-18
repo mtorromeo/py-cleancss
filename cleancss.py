@@ -125,7 +125,7 @@ class Parser(object):
 		
 		return ''.join( [ "%s {\n\t%s\n}\n" % (selectors, '\n\t'.join(definitions)) for selectors, definitions in rules ] )
 
-def convert(sourcestream, context=None):
+def convert(sourcestream):
 	"""Convert a CleanCSS file into a normal stylesheet."""
 	return Parser(sourcestream).toCss()
 
