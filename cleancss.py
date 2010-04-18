@@ -59,9 +59,7 @@ class Parser(object):
 
 	def toCss(self):
 		level = 0
-		ruleLevel = 0
 		indenter = 0
-		prevWasDefinition = False
 		selectorsChanged = False
 		rules = []
 		cur_rule_tree = []
