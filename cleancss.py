@@ -49,12 +49,11 @@ class Parser(object):
 		if len(selectorTree)>1:
 			flattenedBase = self.flattenSelectors(selectorTree[:-1])
 			for i, sel in enumerate(tail):
-				sel = sel
 				if sel[0] == '&':
 					sel = sel[1:]
 				elif flattenedBase != '':
-					sel = flattenedBase+' '+sel
-				tail[i] = sel
+					sel = ' '+sel
+				tail[i] = flattenedBase+sel
 		return ',\n'.join(tail)
 
 	def toCss(self):
