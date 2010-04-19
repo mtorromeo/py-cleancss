@@ -16,7 +16,7 @@ Example::
 """
 import sys, re
 
-version = '1.0'
+version = '1.1'
 __all__ = ['convert']
 
 class ParserError(Exception):
