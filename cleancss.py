@@ -16,7 +16,7 @@ Example::
 """
 import sys, re
 
-version = '1.1'
+version = '1.2'
 __all__ = ['convert']
 
 class ParserError(Exception):
@@ -43,18 +43,18 @@ class Parser(object):
 
 	def __init__(self, sourcestream):
 		self.sourcestream = sourcestream
-	
+
 	def flattenSelectors(self, selectorTree):
-		tail = selectorTree[-1][:]
+		base = selectorTree[0][:]
 		if len(selectorTree)>1:
-			flattenedBase = self.flattenSelectors(selectorTree[:-1])
-			for i, sel in enumerate(tail):
-				if sel[0] == '&':
-					sel = sel[1:]
-				elif flattenedBase != '':
-					sel = ' '+sel
-				tail[i] = flattenedBase+sel
-		return ',\n'.join(tail)
+			tail = self.flattenSelectors(selectorTree[1:])
+			if tail[0] == '&':
+				tail = tail[1:]
+			else:
+				tail = ' '+tail
+			for i, sel in enumerate(base):
+				base[i] += tail
+		return ',\n'.join(base)
 
 	def toCss(self):
 		level = 0
@@ -63,24 +63,24 @@ class Parser(object):
 		rules = []
 		cur_rule_tree = []
 		rule_prefixes = []
-	
+
 		lineno = 0
 		for line in self.sourcestream:
 			lineno += 1
-			
+
 			if line.strip() == "":
 				continue
-			
+
 			indentation = self._r_indentation.match(line).group(0)
 			if indenter == 0 and len(indentation)>0:
 				indenter = len(indentation)
-			
+
 			if indenter>0 and len(indentation) % indenter != 0:
 				raise ParserError(lineno, 'Indentation error')
-			
+
 			newlevel = len(indentation) / indenter if indenter > 0  else 0
 			line = line.strip()
-			
+
 			if newlevel-level>1:
 				raise ParserError(lineno, 'Indentation error')
 
@@ -90,7 +90,7 @@ class Parser(object):
 			while len(cur_rule_tree)>newlevel:
 				cur_rule_tree.pop()
 			level = newlevel
-			
+
 			match = self._r_selector.match(line)
 			if match:
 				selectors = match.group(1).split(',')
@@ -99,12 +99,12 @@ class Parser(object):
 				cur_rule_tree.append(selectors)
 				selectorsChanged = True
 				continue
-			
+
 			match = self._r_property_prefix.match(line)
 			if match:
 				rule_prefixes.append(match.group(1))
 				continue
-			
+
 			match = self._r_definition.match(line)
 			if match:
 				if len(cur_rule_tree) == 0:
@@ -121,7 +121,7 @@ class Parser(object):
 				continue
 
 			raise ParserError(lineno, 'Unexpected item')
-		
+
 		return ''.join( [ "%s {\n\t%s\n}\n" % (selectors, '\n\t'.join(definitions)) for selectors, definitions in rules ] )
 
 def convert(sourcestream):
