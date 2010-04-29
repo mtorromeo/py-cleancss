@@ -81,7 +81,7 @@ Import the cleancss module and call the convert() function with a file-like obje
 Example::
 
 	import cleancss
-	with open('file.css') as f:
+	with open('file.ccss') as f:
 		print cleancss.convert(f)
 
 Command line usage
@@ -92,7 +92,7 @@ and print the result to the console.
 
 Example::
 
-	cleancss.py file.css > result.css
+	cleancss.py file.ccss > result.css
 
 LICENSE
 -------
