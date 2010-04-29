@@ -16,7 +16,7 @@ Example::
 """
 import sys, re
 
-version = '1.2'
+version = '1.3'
 __all__ = ['convert']
 
 class ParserError(Exception):
@@ -45,16 +45,22 @@ class Parser(object):
 		self.sourcestream = sourcestream
 
 	def flattenSelectors(self, selectorTree):
+		selectors = []
 		base = selectorTree[0][:]
+		tails = None
 		if len(selectorTree)>1:
-			tail = self.flattenSelectors(selectorTree[1:])
-			if tail[0] == '&':
-				tail = tail[1:]
+			tails = self.flattenSelectors(selectorTree[1:])
+		for i, sel in enumerate(base):
+			if tails is not None:
+				for tail in tails:
+					if tail[0] == '&':
+						tail = tail[1:]
+					else:
+						tail = ' '+tail
+					selectors.append( base[i] + tail )
 			else:
-				tail = ' '+tail
-			for i, sel in enumerate(base):
-				base[i] += tail
-		return ',\n'.join(base)
+				selectors.append( base[i] )
+		return selectors
 
 	def toCss(self):
 		level = 0
@@ -110,7 +116,7 @@ class Parser(object):
 				if len(cur_rule_tree) == 0:
 					raise ParserError(lineno, 'Selector expected, found definition')
 				if selectorsChanged:
-					selectors = self.flattenSelectors(cur_rule_tree)
+					selectors = ',\n'.join( self.flattenSelectors(cur_rule_tree) )
 					rules.append((selectors, []))
 					selectorsChanged = False
 				if len(rule_prefixes)>0:
