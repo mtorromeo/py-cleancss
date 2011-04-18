@@ -74,6 +74,37 @@ output of the above file::
 		color: #dddddd;
 	}
 
+Callbacks
+---------
+Starting with version 1.4 CleanCSS supports user callbacks to alter the resulting stylesheet.
+The callback function receives the property name and its value and should return a list of property-value pairs to insert in the generated CSS.
+
+Example::
+
+	import cleancss
+
+	def callback(prop, value):
+		rules = []
+
+		# Include the unaltered rule
+		rules.append( (prop, value) )
+
+		# Include a variant of the rule
+		rules.append( ("-moz-"+prop, value) )
+
+		return rules
+
+	with open('file.ccss') as f:
+		print cleancss.convert(f, callback)
+
+The library already includes a callback function that can be used to convert between the most common browser variants
+
+Example::
+	import cleancss
+
+	with open('file.ccss') as f:
+		print cleancss.convert(f, cleancss.callbacks.browser_variants)
+
 Library usage
 -------------
 Import the cleancss module and call the convert() function with a file-like object.

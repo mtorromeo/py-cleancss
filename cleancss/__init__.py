@@ -18,7 +18,7 @@ import sys
 import re
 import callbacks
 
-version = '1.3'
+version = '1.4'
 __all__ = ['convert']
 
 class ParserError(Exception):
