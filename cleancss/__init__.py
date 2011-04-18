@@ -14,7 +14,9 @@ Example::
     with open('file.css') as f:
         print cleancss.convert(f)
 """
-import sys, re
+import sys
+import re
+import callbacks
 
 version = '1.3'
 __all__ = ['convert']

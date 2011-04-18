@@ -108,3 +108,45 @@ class TestConvert(unittest.TestCase):
         ccss.seek(0)
         self.assertEqual(cleancss.convert(ccss, callback), expected_result)
 
+    def test_03_variants_callback(self):
+        ccss = StringIO()
+        ccss.write(dedent('''
+            #header, #footer:
+                border-radius: 5px
+                padding: 0
+                text-overflow: ellipsis
+                display: box
+                border-top-left-radius: 5px
+                -ms-filter: "test"
+                opacity: 0.5
+                opacity: notvalid
+        '''))
+
+        expected_result = dedent('''
+            #header,
+            #footer {
+                border-radius: 5px;
+                -o-border-radius: 5px;
+                -moz-border-radius: 5px;
+                -webkit-border-radius: 5px;
+                padding: 0;
+                text-overflow: ellipsis;
+                -o-text-overflow: ellipsis;
+                display: box;
+                display: -moz-box;
+                display: -webkit-box;
+                border-top-left-radius: 5px;
+                -moz-border-radius-topleft: 5px;
+                -webkit-border-top-left-radius: 5px;
+                -ms-filter: "test";
+                filter: test;
+                opacity: 0.5;
+                filter: alpha(opacity=50);
+                opacity: notvalid;
+            }
+        ''').lstrip().replace("    ", "\t")
+
+
+        ccss.seek(0)
+        self.assertEqual(cleancss.convert(ccss, cleancss.callbacks.browser_variants), expected_result)
+
