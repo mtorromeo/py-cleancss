@@ -42,10 +42,10 @@ class Parser(object):
     _r_definition = re.compile(r'^([^\s]+)\s*:\s*(.+)$')
     _r_comment = re.compile(r'([^:]|^)//.*$')
 
-    __callbacks = []
 
     def __init__(self, sourcestream):
         self.sourcestream = sourcestream
+        self.__callbacks = []
 
     def flattenSelectors(self, selectorTree):
         selectors = []
