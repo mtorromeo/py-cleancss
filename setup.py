@@ -12,7 +12,7 @@ setup(
     version=cleancss.version,
     url='http://github.com/mtorromeo/py-cleancss/',
     download_url = "http://github.com/mtorromeo/py-cleancss/tarball/v"+cleancss.version,
-    py_modules=['cleancss'],
+    packages=['cleancss'],
     description='Pythonic markup for css',
     long_description = open(README).read(),
     keywords=["css"],
