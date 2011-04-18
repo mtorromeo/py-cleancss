@@ -40,6 +40,7 @@ class Parser(object):
     _r_selector = re.compile(r'^(.+)\s*:$')
     _r_property_prefix = re.compile(r'^([^:>\s]+)->$')
     _r_definition = re.compile(r'^([^\s]+)\s*:\s*(.+)$')
+    _r_comment = re.compile(r'([^:]|^)//.*$')
 
     def __init__(self, sourcestream):
         self.sourcestream = sourcestream
@@ -73,6 +74,8 @@ class Parser(object):
         lineno = 0
         for line in self.sourcestream:
             lineno += 1
+
+            line = self._r_comment.sub('', line)
 
             if line.strip() == "":
                 continue
