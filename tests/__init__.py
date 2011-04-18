@@ -33,8 +33,8 @@ class TestConvert(unittest.TestCase):
                         text-align: right
                         color: #ddd
         '''))
-        ccss.seek(0)
-        self.assertEqual(cleancss.convert(ccss).replace("\t", "    "), dedent('''
+
+        expected_result = dedent('''
             #header,
             #footer {
                 margin: 0;
@@ -71,7 +71,10 @@ class TestConvert(unittest.TestCase):
                 text-align: right;
                 color: #ddd;
             }
-        ''').lstrip())
+        ''').lstrip().replace("    ", "\t")
+
+        ccss.seek(0)
+        self.assertEqual(cleancss.convert(ccss), expected_result)
 
     def test_02_callback(self):
         def callback(prop, value):
@@ -86,17 +89,22 @@ class TestConvert(unittest.TestCase):
                 margin: 0
                 padding: 0
         '''))
-        ccss.seek(0)
+
+        expected_result = dedent('''
+            #header,
+            #footer {
+                margin-variant: 0;
+                padding-variant: 0;
+            }
+        ''').lstrip().replace("    ", "\t")
 
 
         c = cleancss.Parser(ccss)
         c.registerPropertyCallback( callback )
 
 
-        self.assertEqual(c.toCss().replace("\t", "    "), dedent('''
-            #header,
-            #footer {
-                margin-variant: 0;
-                padding-variant: 0;
-            }
-        ''').lstrip())
+        ccss.seek(0)
+        self.assertEqual(c.toCss(), expected_result)
+        ccss.seek(0)
+        self.assertEqual(cleancss.convert(ccss, callback), expected_result)
+

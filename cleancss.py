@@ -148,9 +148,12 @@ class Parser(object):
     def registerPropertyCallback(self, callback):
         self.__callbacks.append( callback )
 
-def convert(sourcestream):
+def convert(sourcestream, callback=None):
     """Convert a CleanCSS file into a normal stylesheet."""
-    return Parser(sourcestream).toCss()
+    parser = Parser(sourcestream)
+    if callback is not None:
+        parser.registerPropertyCallback(callback)
+    return parser.toCss()
 
 def main():
     if len(sys.argv) <= 1:
