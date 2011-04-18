@@ -72,3 +72,31 @@ class TestConvert(unittest.TestCase):
                 color: #ddd;
             }
         ''').lstrip())
+
+    def test_02_callback(self):
+        def callback(prop, value):
+            return [
+                (prop + "-variant", value)
+            ]
+
+
+        ccss = StringIO()
+        ccss.write(dedent('''
+            #header, #footer:
+                margin: 0
+                padding: 0
+        '''))
+        ccss.seek(0)
+
+
+        c = cleancss.Parser(ccss)
+        c.registerPropertyCallback( callback )
+
+
+        self.assertEqual(c.toCss().replace("\t", "    "), dedent('''
+            #header,
+            #footer {
+                margin-variant: 0;
+                padding-variant: 0;
+            }
+        ''').lstrip())

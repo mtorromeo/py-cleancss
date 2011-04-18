@@ -42,6 +42,8 @@ class Parser(object):
     _r_definition = re.compile(r'^([^\s]+)\s*:\s*(.+)$')
     _r_comment = re.compile(r'([^:]|^)//.*$')
 
+    __callbacks = []
+
     def __init__(self, sourcestream):
         self.sourcestream = sourcestream
 
@@ -126,12 +128,25 @@ class Parser(object):
                     prefixes = '-'.join(rule_prefixes) + '-'
                 else:
                     prefixes = ''
-                rules[-1][1].append("%s: %s;" % (prefixes + match.group(1), match.group(2)))
+
+                # Apply callbacks if present
+                if self.__callbacks:
+                    properties = []
+                    for callback in self.__callbacks:
+                        properties.extend( callback(match.group(1), match.group(2)) )
+                else:
+                    properties = [(match.group(1), match.group(2))]
+
+                for (prop, value) in properties:
+                    rules[-1][1].append("%s: %s;" % (prefixes + prop, value))
                 continue
 
             raise ParserError(lineno, 'Unexpected item')
 
         return ''.join( [ "%s {\n\t%s\n}\n" % (selectors, '\n\t'.join(definitions)) for selectors, definitions in rules ] )
+
+    def registerPropertyCallback(self, callback):
+        self.__callbacks.append( callback )
 
 def convert(sourcestream):
     """Convert a CleanCSS file into a normal stylesheet."""
