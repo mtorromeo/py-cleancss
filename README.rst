@@ -92,7 +92,7 @@ and print the result to the console.
 
 Example::
 
-	cleancss.py file.ccss > result.css
+	python -m cleancss file.ccss > result.css
 
 LICENSE
 -------
