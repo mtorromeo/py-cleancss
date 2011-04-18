@@ -120,6 +120,7 @@ class TestConvert(unittest.TestCase):
                 -ms-filter: "test"
                 opacity: 0.5
                 opacity: notvalid
+                background: linear-gradient(top left, #000 0%, #FFF 100%)
         '''))
 
         expected_result = dedent('''
@@ -143,6 +144,10 @@ class TestConvert(unittest.TestCase):
                 opacity: 0.5;
                 filter: alpha(opacity=50);
                 opacity: notvalid;
+                background: linear-gradient(top left, #000 0%, #FFF 100%);
+                background: -o-linear-gradient(top left, #000 0%, #FFF 100%);
+                background: -moz-linear-gradient(top left, #000 0%, #FFF 100%);
+                background: -webkit-linear-gradient(top left, #000 0%, #FFF 100%);
             }
         ''').lstrip().replace("    ", "\t")
 

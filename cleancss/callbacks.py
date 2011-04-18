@@ -28,4 +28,13 @@ def browser_variants(prop, value):
             definitions.append( ("-moz-border-radius-{y}{x}".format(y=bradius.group(1), x=bradius.group(2)), value) )
             definitions.append( ("-webkit-"+prop, value) )
 
+    for (prop, value) in definitions:
+        gradient = re.match(r'^(linear-gradient|radial-gradient)\s*\((.*)\)$', value)
+        if gradient:
+            function = gradient.group(1)
+            params = gradient.group(2)
+            definitions.append( (prop, "-o-{func}({params})".format(func=function, params=params)) )
+            definitions.append( (prop, "-moz-{func}({params})".format(func=function, params=params)) )
+            definitions.append( (prop, "-webkit-{func}({params})".format(func=function, params=params)) )
+
     return definitions
