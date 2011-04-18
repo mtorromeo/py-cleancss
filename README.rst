@@ -100,6 +100,7 @@ Example::
 The library already includes a callback function that can be used to convert between the most common browser variants
 
 Example::
+
 	import cleancss
 
 	with open('file.ccss') as f:
