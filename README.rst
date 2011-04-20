@@ -1,6 +1,5 @@
 CleanCSS
 --------
-
 CleanCSS is a simple pythonic language for CSS inspired by
 `CleverCSS <http://sandbox.pocoo.org/clevercss/>`_ but simpler and with less
 obstrusive features.
@@ -16,7 +15,6 @@ and it now works fine for me in REAL modern websites.
 
 Syntax examples
 ---------------
-
 I'm going to keep the CleverCSS examples where possible since the syntax is really
 similar.
 
@@ -118,8 +116,8 @@ Example::
 
 Command line usage
 ------------------
-Call the cleancss.py without parameters to show the usage instructions.
-Pass any number of files to cleancss.py and the script will convert the files to CSS
+Call the cleancss module without parameters to show the usage instructions.
+Pass any number of files to cleancss and the script will convert the files to CSS
 and print the result to the console.
 
 Example::
@@ -128,7 +126,7 @@ Example::
 
 LICENSE
 -------
-Copyright (c) 2010 Massimiliano Torromeo
+Copyright (c) 2010-2011 Massimiliano Torromeo
 
 CleanCSS is free software released under the terms of the BSD license.
 
