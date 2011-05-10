@@ -13,8 +13,15 @@ def browser_variants(prop, value):
         definitions.append( ("filter", value[1:-1]) )
     elif prop in ["box-orient", "box-pack", "box-align", "box-flex", "background-size", "box-shadow", "border-radius", "transform", "transition", "column-count", "column-gap", "column-width", "resize"]:
         definitions.append( ("-o-"+prop, value) )
+        definitions.append( ("-ms-"+prop, value) )
         definitions.append( ("-moz-"+prop, value) )
         definitions.append( ("-webkit-"+prop, value) )
+    elif prop == "background-clip":
+        definitions.append( ("-webkit-"+prop, value) )
+        if value == "padding-box":
+            definitions.append( ("-moz-"+prop, "padding") )
+        elif value == "border-box":
+            definitions.append( ("-moz-"+prop, "border") )
     elif prop == "text-overflow":
         definitions.append( ("-o-"+prop, value) )
     elif prop == "display" and value=="box":
@@ -32,6 +39,7 @@ def browser_variants(prop, value):
             function = gradient.group(1)
             params = gradient.group(2)
             definitions.append( (prop, "-o-{func}({params})".format(func=function, params=params)) )
+            definitions.append( (prop, "-ms-{func}({params})".format(func=function, params=params)) )
             definitions.append( (prop, "-moz-{func}({params})".format(func=function, params=params)) )
             definitions.append( (prop, "-webkit-{func}({params})".format(func=function, params=params)) )
 
