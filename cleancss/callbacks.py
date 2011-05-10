@@ -1,8 +1,6 @@
 import re
 
 def browser_variants(prop, value):
-    definitions = [(prop, value)]
-
     if prop == "opacity":
         # IE opacity filter
         try:
@@ -36,5 +34,7 @@ def browser_variants(prop, value):
             definitions.append( (prop, "-o-{func}({params})".format(func=function, params=params)) )
             definitions.append( (prop, "-moz-{func}({params})".format(func=function, params=params)) )
             definitions.append( (prop, "-webkit-{func}({params})".format(func=function, params=params)) )
+
+    definitions = [(prop, value)]
 
     return definitions
