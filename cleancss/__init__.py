@@ -42,7 +42,9 @@ class Parser(object):
     _r_selector = re.compile(r'^(.+)\s*:$')
     _r_property_prefix = re.compile(r'^([^:>\s]+)->$')
     _r_definition = re.compile(r'^([^\s]+)\s*:\s*(.+)$')
-    _r_comment = re.compile(r'([^:]|^)//.*$')
+    _r_comment = re.compile(r'/\*.*?\*/|//.*$')
+    _multi_comment_start = "/*"
+    _multi_comment_end = "*/"
 
 
     def __init__(self, sourcestream):
@@ -72,6 +74,7 @@ class Parser(object):
         indenter = 0
         selectorsChanged = False
         rules = []
+        comment = False
         cur_rule_tree = []
         rule_prefixes = []
 
@@ -79,7 +82,18 @@ class Parser(object):
         for line in self.sourcestream:
             lineno += 1
 
+            if comment:
+                if self._multi_comment_end in line:
+                    comment = False
+                    line = line[line.index(self._multi_comment_end)+len(self._multi_comment_end):]
+                else:
+                    continue
+
             line = self._r_comment.sub('', line)
+
+            if self._multi_comment_start in line:
+                comment = True
+                line = line[:line.index(self._multi_comment_start)]
 
             if line.strip() == "":
                 continue
