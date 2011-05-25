@@ -22,9 +22,7 @@ version = '1.4'
 __all__ = ['convert']
 
 class ParserError(Exception):
-    """
-    Raised on syntax errors.
-    """
+    """Raised on syntax errors."""
 
     def __init__(self, lineno, message):
         self.lineno = lineno
@@ -38,6 +36,8 @@ class ParserError(Exception):
         )
 
 class Parser(object):
+    """CCSS Parser that handles the conversion to the standard CSS syntax."""
+
     _r_indentation = re.compile(r'^\s*')
     _r_selector = re.compile(r'^(.+)\s*:$')
     _r_property_prefix = re.compile(r'^([^:>\s]+)->$')
@@ -148,6 +148,22 @@ class Parser(object):
         return ''.join( [ "%s {\n\t%s\n}\n" % (selectors, '\n\t'.join(definitions)) for selectors, definitions in rules ] )
 
     def registerPropertyCallback(self, callback):
+        """
+        Registers a callback that will be called on every property parsed and can alter them
+
+        Example::
+
+            import cleancss
+
+            def noop_callback(prop, value):
+                return [(prop, value)]
+
+            with open("test.ccss") as f:
+                p = cleancss.Parser(f)
+                p.registerPropertyCallback(noop_callback)
+                print p.toCss()
+        """
+
         self.__callbacks.append( callback )
 
 def convert(sourcestream, callback=None):
