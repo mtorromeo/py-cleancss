@@ -42,7 +42,7 @@ class Parser(object):
     _r_selector = re.compile(r'^(.+)\s*:$')
     _r_property_prefix = re.compile(r'^([^:>\s]+)->$')
     _r_definition = re.compile(r'^([^\s]+)\s*:\s*(.+)$')
-    _r_comment = re.compile(r'/\*.*?\*/|//.*$')
+    _r_comment = re.compile(r'/\*.*?\*/|([^:]|^)//.*$')
     _multi_comment_start = "/*"
     _multi_comment_end = "*/"
 
