@@ -151,6 +151,21 @@ class TestConvert(unittest.TestCase):
             }
         ''').lstrip().replace("    ", "\t")
 
+    def test_04_multiline_comments(self):
+        ccss = StringIO()
+        ccss.write(dedent('''body:
+            /* Hi // there */
+            color: /* inline comment! */ red
+                /* Multi-
+            line */ // and a comment
+        '''))
+
+        expected_result = dedent('''
+            body {
+                color: red;
+            }
+        ''').lstrip().replace("    ", "\t")
+
 
         ccss.seek(0)
         self.assertEqual(cleancss.convert(ccss, cleancss.callbacks.browser_variants), expected_result)
