@@ -16,7 +16,7 @@ class TestConvert(unittest.TestCase):
                     size: .9em // Comment
 
                 li:
-                    padding: 0.4em
+                    padding: 0.4em// Comment
                     margin: 0.8em 0 0.8em
 
                     a:
@@ -170,3 +170,5 @@ class TestConvert(unittest.TestCase):
         ccss.seek(0)
         self.assertEqual(cleancss.convert(ccss, cleancss.callbacks.browser_variants), expected_result)
 
+if __name__ == "__main__":
+    unittest.main()
